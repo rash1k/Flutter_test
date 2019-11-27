@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_test/data/entity/cards.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -18,7 +21,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.cyan,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -38,23 +41,41 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  static List<Cards> data = [
+    Cards(
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-HeAGHxsU59NboZMUGVv1brzAkPZDj635WR2ksbN66Sp92AlD&s',
+        'Lorem ipsum',
+        'dolor sit amet'),
+    Cards(
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-HeAGHxsU59NboZMUGVv1brzAkPZDj635WR2ksbN66Sp92AlD&s',
+        'Lorem ipsum',
+        'dolor sit amet'),
+    Cards(
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-HeAGHxsU59NboZMUGVv1brzAkPZDj635WR2ksbN66Sp92AlD&s',
+        'Lorem ipsum',
+        'dolor sit amet'),
+
+//    {
+//      'image': 'https://miro.medium.com/max/3200/1*QBxc5-QaDrLZV9VPHcqG0Q.png',
+//      'title': 'Lorem ipsum',
+//      'description': 'dolor sit amet'
+//    },
+//    {
+//      'image': 'https://abduzeedo.com/sites/default/files/styles/home_cover/public/originals/06993c70009113.5b9573e708e46.png?itok=Xpr1snbS',
+//      'title': 'Lorem ipsum',
+//      'description': 'dolor sit amet'
+//    },
+  ];
+
+  void _populateCards() {}
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter--;
-    });
+  void _onButtonPress() {
+    print('Clicked');
   }
 
   @override
@@ -66,46 +87,60 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+//      appBar: AppBar(
+//        backgroundColor: Colors.white,
+//        elevation: 0,
+////        leading: Row(
+////        children: <Widget>[
+////          FloatingActionButton: FloatingActionButton.extended(onPressed: null, label: null)
+////        ],
+////        ),
+//      ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+
+      body: SafeArea(
+        top: true,
+        child: SingleChildScrollView(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Image.network(
+                  'https://cdn.dribbble.com/users/65767/screenshots/4935267/peter_deltondo_unfold_crowdrise_gofundme_pricing_illustrations.gif'),
+              Row(children: <Widget>[
+                new Card(
+                  child: new Container(
+                    padding: new EdgeInsets.all(32.0),
+                    child: new Column(
+                      children: <Widget>[
+                        new Text('Hello World'),
+                        new Text('How are you?')
+                      ],
+                    ),
+                  ),
+                )
+              ]),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: _incrementCounter,
+//        tooltip: 'Increment',
+//        child: Icon(Icons.add),
+//      ), // This trailing comma makes auto-formatting nicer for build methods.
+
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 150),
+        child: FloatingActionButton.extended(
+            onPressed: _onButtonPress,
+            elevation: 10.0,
+            label: Text('Menu'),
+            icon: Icon(Icons.menu)),
+      ),
     );
   }
 }
