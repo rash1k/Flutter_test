@@ -5,22 +5,32 @@ void main() {
   runApp(MyApp());
 }
 
+final responseData = [
+  {
+    'image':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-HeAGHxsU59NboZMUGVv1brzAkPZDj635WR2ksbN66Sp92AlD&s',
+    'title': 'Lorem ipsum',
+    'description': 'dolor sit amet'
+  },
+  {
+    'image': 'https://miro.medium.com/max/3200/1*QBxc5-QaDrLZV9VPHcqG0Q.png',
+    'title': 'Lorem ipsum',
+    'description': 'dolor sit amet'
+  },
+  {
+    'image':
+        'https://abduzeedo.com/sites/default/files/styles/home_cover/public/originals/06993c70009113.5b9573e708e46.png?itok=Xpr1snbS',
+    'title': 'Lorem ipsum',
+    'description': 'dolor sit amet'
+  },
+];
+
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.cyan,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -30,62 +40,74 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
-  static List<Cards> data = [
-    Cards(
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-HeAGHxsU59NboZMUGVv1brzAkPZDj635WR2ksbN66Sp92AlD&s',
-        'Lorem ipsum',
-        'dolor sit amet'),
-    Cards(
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-HeAGHxsU59NboZMUGVv1brzAkPZDj635WR2ksbN66Sp92AlD&s',
-        'Lorem ipsum',
-        'dolor sit amet'),
-    Cards(
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-HeAGHxsU59NboZMUGVv1brzAkPZDj635WR2ksbN66Sp92AlD&s',
-        'Lorem ipsum',
-        'dolor sit amet'),
-
-//    {
-//      'image': 'https://miro.medium.com/max/3200/1*QBxc5-QaDrLZV9VPHcqG0Q.png',
-//      'title': 'Lorem ipsum',
-//      'description': 'dolor sit amet'
-//    },
-//    {
-//      'image': 'https://abduzeedo.com/sites/default/files/styles/home_cover/public/originals/06993c70009113.5b9573e708e46.png?itok=Xpr1snbS',
-//      'title': 'Lorem ipsum',
-//      'description': 'dolor sit amet'
-//    },
-  ];
-
-  void _populateCards() {}
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static List<Cards> data = [
+    Cards(
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-HeAGHxsU59NboZMUGVv1brzAkPZDj635WR2ksbN66Sp92AlD&s',
+        'Lorem ipsum',
+        'dolor sit amet'),
+  ];
+
+  Widget _createCardItem(BuildContext context, int index) {
+    Size size = MediaQuery.of(context).size;
+
+    final title = responseData[index]['title'];
+    final description = responseData[index]['description'];
+    final image = responseData[index]['image'];
+
+    return Container(
+      height: 150,
+      width: 200,
+      child: Card(
+        elevation: 5,
+        semanticContainer: true,
+        color: Colors.black,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: const Radius.circular(50.0),
+              topLeft: const Radius.circular(4),
+              bottomRight: const Radius.circular(4),
+              bottomLeft: const Radius.circular(50.0)),
+        ),
+        margin: EdgeInsets.fromLTRB(20, 50, 20, 70),
+        child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(image), fit: BoxFit.cover)),
+          child: Column(
+            children: <Widget>[
+              Center(
+//                heightFactor: 0,
+                  child: Column(
+                children: <Widget>[
+                  Text(title,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center),
+                  Text(description, style: TextStyle(color: Colors.white54))
+                ],
+              ))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _onButtonPress() {
     print('Clicked');
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
 //      appBar: AppBar(
 //        backgroundColor: Colors.white,
@@ -101,30 +123,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
       body: SafeArea(
         top: true,
-        child: SingleChildScrollView(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Image.network(
-                  'https://cdn.dribbble.com/users/65767/screenshots/4935267/peter_deltondo_unfold_crowdrise_gofundme_pricing_illustrations.gif'),
-              Row(children: <Widget>[
-                new Card(
-                  child: new Container(
-                    padding: new EdgeInsets.all(32.0),
-                    child: new Column(
-                      children: <Widget>[
-                        new Text('Hello World'),
-                        new Text('How are you?')
-                      ],
-                    ),
-                  ),
-                )
-              ]),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Image.network(
+                'https://cdn.dribbble.com/users/65767/screenshots/4935267/peter_deltondo_unfold_crowdrise_gofundme_pricing_illustrations.gif'),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 1,
+              child: ListView.builder(
+//                itemExtent: 100,
+                  itemCount: responseData.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: _createCardItem),
+            )
+          ],
         ),
       ),
 //      floatingActionButton: FloatingActionButton(
@@ -144,3 +158,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+//class CardsList {
+//  final String title;
+//  final String description;
+//  final String image;
+//  final List<Card> listWithCards;
+//
+//  CardsList.mapCards(Map<String, dynamic> data)
+//      : assert(data['title'] != null),
+//        assert(data['description'] != null),
+//        assert(data['image'] != null),
+//        title = data['title'],
+//        description = data['description'],
+//        image = data['image'];
+//
+//  listWithCards.add(Card(title, description, image));
+//
+//}
