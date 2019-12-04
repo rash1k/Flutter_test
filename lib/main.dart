@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_test/data/entity/cards.dart';
-import 'ui/card/card_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:flutter_app_test/router/router.dart';
+import 'ui/card/products_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,6 +32,8 @@ final responseData = [
   },
 ];
 
+var data;
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -37,11 +42,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.cyan,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-      routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new MyHomePage(),
-        '/card-view': (BuildContext context) => new CardView()
-      }
+      initialRoute: 'home',
+      onGenerateRoute: generateRoutes,
     );
   }
 }
@@ -66,13 +68,33 @@ class _MyHomePageState extends State<MyHomePage> {
   void _navigateToScreen(data) {
     final String id = data['id'];
     print('another screen $id');
-    Navigator.pushNamed(context, '/card-view', arguments: data);
+    Navigator.pushNamed(context, 'card-view', arguments: id);
+  }
+
+  Widget _buildCardsListHorisontal(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('cards').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return CircularProgressIndicator();
+
+        return _buildList(context, snapshot.data.documents);
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    data = snapshot;
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: snapshot.length,
+      itemBuilder: _createCardItem,
+    );
   }
 
   Widget _createCardItem(BuildContext context, int index) {
     Size size = MediaQuery.of(context).size;
 
-    final card = responseData[index];
+    final card = data[index];
     final cardId = card['id'];
     final title = card['title'];
     final description = card['description'];
@@ -148,17 +170,13 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               color: Colors.blue,
               padding: EdgeInsets.all(20.0),
-              child: Text(pageDescription, style: TextStyle(color: Colors.white)),
+              child:
+                  Text(pageDescription, style: TextStyle(color: Colors.white)),
             ),
             Flexible(
-              fit: FlexFit.tight,
-              flex: 1,
-              child: ListView.builder(
-//                itemExtent: 100,
-                  itemCount: responseData.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: _createCardItem),
-            )
+                fit: FlexFit.tight,
+                flex: 1,
+                child: _buildCardsListHorisontal(context))
           ],
         ),
       ),
